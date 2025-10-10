@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Navbar from './Navbar'
 import { Sidebar } from 'lucide-react'
 import { Outlet } from 'react-router-dom';
@@ -17,13 +17,27 @@ const Layout = ({onLogout, user}) => {
         try {
             const token = localStorage.getItem('token');
             if(!token) throw new Error("No Auth Token Found")
-            const {data} = await axios.get("")
-                
-        } catch (error) {
+            const {data} = await axios.get("http://localhost:4000/api/tasks/gp" , {
+                headers: {Authorization: `Bearer ${token}`}
+            })  
             
+            const arr = Array.isArray(data) ? data :
+                Array.isArray(data?.tasks) ? data.tasks :
+                    Array.isArray(data?.data) ? data.data : []
+            setTasks(arr)
+        } 
+        catch (err) {
+            console.error(err);
+            setError(err.message || "Could not load tasks.")
+            if(err.response?.status === 401) onLogout()
         }
-   })
+        finally{
+            setLoading(false)
+        }
+   }, [onLogout])
 
+   useEffect(() => { fetchTasks()}, [fetchTasks])
+   
   return (
     <div className='min-h-screen bg-gray-50'>
         <Navbar user={user} onLogout={onLogout}/>
