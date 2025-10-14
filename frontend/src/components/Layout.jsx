@@ -3,7 +3,7 @@ import Navbar from './Navbar'
 import Sidebar from './Sidebar';
 import { Outlet } from 'react-router-dom';
 import axios, { Axios } from 'axios'
-import {Circle, TrendingUp} from 'lucide-react'
+import {Circle, TrendingUp, Clock, Zap} from 'lucide-react'
 
 const Layout = ({onLogout, user}) => {
 
