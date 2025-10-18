@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from './components/Navbar';
-import { Outlet, Routes, Route, useNavigate } from 'react-router-dom'
+import { Outlet, Routes, Route, useNavigate, Navigate } from 'react-router-dom'
 import Layout from './components/Layout';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
@@ -37,11 +37,11 @@ const App = () => {
     navigate('/login', {replace: true})
   }
 
-  const protectedLayout = () => {
+  const protectedLayout = () => (
     <Layout user={currentUser} onLogout={handleLogout}>
       <Outlet />
     </Layout>
-  }
+  )
 
   return(
     <Routes>
@@ -52,13 +52,19 @@ const App = () => {
       <Route path='/signup' element={<div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center'>
         <SignUp onSubmit={handleAuthSubmit} onSwitchMode={() => navigate('/login')}/>
       </div>}/>
-      
-       {/* Layout is a parent route */}
-    <Route path="/" element={<Layout user={currentUser} onLogout={handleLogout} />}>
+
+      <Route element={currentUser ? <ProtectedLayout /> :
+        <Navigate to='/login' replace/>}>
+
+
+      <Route path="/" element={<Layout user={currentUser} onLogout={handleLogout} />}>
                {/* renders at "/" */}
-      <Route path="profile" element={<profile />} /> {/* renders at "/profile" */}
-      {/* add other child routes here */}
-    </Route>
+        <Route path="profile" element={<profile />} /> {/* renders at "/profile" */}
+        {/* add other child routes here */}
+        </Route>
+      </Route>
+
+      <Route path='*' element={<Navigate to={currentUser ? '/' : '/login'} replace/>}/>
     </Routes>
   )
 }

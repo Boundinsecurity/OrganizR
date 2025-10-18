@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { UserPlus} from 'lucide-react'
+import { UserPlus, Circle} from 'lucide-react'
 import {BUTTONCLASSES, FIELDS, Inputwrapper, MESSAGE_ERROR, MESSAGE_SUCCESS} from '../assets/dummy'
 import axios from 'axios';
 
@@ -57,7 +57,7 @@ const SignUp = ({onSwitchMode}) => {
           <div key={name} className={Inputwrapper}>
             <Icon className='text-purple-500 w-5 h-5 mr-2'/>
             <input type={type} placeholder={placeholder} value={formData[name]} 
-            onChange={(e) => setFormData({...formData, [name]: e.target.value })} className='w-full focus:outline-none text-sm text-gray-700' required/>
+            onChange={(e) => setFormData({...formData, [name]: e.target.value })} className='w-full focus:outline-none text-sm text-gray-500' required/>
           </div>
         ))}
         <button type='submit' className={BUTTONCLASSES} disabled={loading}>
