@@ -4,6 +4,7 @@ import { Outlet, Routes, Route, useNavigate, Navigate } from 'react-router-dom'
 import Layout from './components/Layout';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
+import Dashboard from './pages/Dashboard';
 
 const App = () => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const App = () => {
     navigate('/login', {replace: true})
   }
 
-  const protectedLayout = () => (
+  const ProtectedLayout = () => (
     <Layout user={currentUser} onLogout={handleLogout}>
       <Outlet />
     </Layout>
@@ -57,11 +58,8 @@ const App = () => {
         <Navigate to='/login' replace/>}>
 
 
-      <Route path="/" element={<Layout user={currentUser} onLogout={handleLogout} />}>
-               {/* renders at "/" */}
-        <Route path="profile" element={<profile />} /> {/* renders at "/profile" */}
-        {/* add other child routes here */}
-        </Route>
+        <Route path='/' element={<Dashboard />} />
+        
       </Route>
 
       <Route path='*' element={<Navigate to={currentUser ? '/' : '/login'} replace/>}/>
