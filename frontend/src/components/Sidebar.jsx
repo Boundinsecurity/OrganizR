@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { NavLink } from 'react-router-dom';
 import { LINK_CLASSES, menuItems, PRODUCTIVITY_CARD, SIDEBAR_CLASSES } from '../assets/dummy'
 import {Sparkles} from 'lucide-react'
 
