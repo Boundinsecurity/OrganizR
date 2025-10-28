@@ -1,18 +1,25 @@
 import express from 'express'
-import { getCurrentUser, loginUser, registerUser, updatePassword, updateProfile } from '../controllers/userController.js';
-import authMiddleware from '../middleware/auth.js'
+import {
+  registerUser,
+  loginUser,
+  getCurrentUser,
+  updateProfile,
+  updatePassword,
+  forgotPassword,
+  resetPassword
+} from '../controllers/userController.js'
+import authMiddleware from '../middleware/auth.js' // adjust path if you have auth middleware
 
-const userRouter = express.Router();
+const router = express.Router()
 
-// Public Links
+router.post('/register', registerUser)
+router.post('/login', loginUser)
+router.get('/me', authMiddleware, getCurrentUser)
+router.put('/profile', authMiddleware, updateProfile)
+router.put('/change-password', authMiddleware, updatePassword)
 
-userRouter.post('/register', registerUser);
-userRouter.post('/login', loginUser);
+// password reset endpoints
+router.post('/forgot-password', forgotPassword)
+router.post('/reset-password/:token', resetPassword)
 
-// Private Links{protect}
-
-userRouter.get('/me',authMiddleware, getCurrentUser);
-userRouter.get('/profile',authMiddleware,  updateProfile);
-userRouter.put('/password',authMiddleware,  updatePassword);
-
-export default userRouter;
+export default router
