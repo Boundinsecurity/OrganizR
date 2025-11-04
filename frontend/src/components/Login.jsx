@@ -32,11 +32,19 @@ const Login = ({onSubmit, onSwitchMode}) => {
             navigate('/')
           }
           else{
-            localStorage.clear()
+            // server responded but didn't mark success - log for debugging
+            console.warn('session-restore not successful', data)
+            // do not immediately clear localStorage for ambiguous response
           }
         } 
-        catch  {
-          localStorage.clear()
+        catch (err) {
+          const status = err.response?.status
+          console.error('session-restore error', status, err.response?.data || err.message)
+          // Only clear token when server explicitly rejects authorization
+          if (status === 401 || status === 403) {
+            localStorage.removeItem('token')
+            localStorage.removeItem('userId')
+          }
         }
       })()
     }
@@ -44,10 +52,7 @@ const Login = ({onSubmit, onSwitchMode}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if(!rememberMe) {
-      toast.error('You must enable Remember Me to login.')
-      return
-    }
+    // REMEMBER: removed the "must enable Remember Me" guard so login works without checking the box.
     setLoading(true)
 
     try {
@@ -92,7 +97,8 @@ const Login = ({onSubmit, onSwitchMode}) => {
 ]
 
   return (
-    <div className=' max-w-md bg-white w-full shadow-lg border border-purple-100 rounded-xl p-8'>
+    
+    <div className=' max-w-md bg-gradient-to-br from-fuchsia-300 to-fuchsia-100 w-full shadow-lg border border-purple-100 rounded-xl p-8'>
       <ToastContainer position='top-center' autoClose={3000} hideProgressBar/>
 
       <div className='mb-6 text-center'>
@@ -115,18 +121,24 @@ const Login = ({onSubmit, onSwitchMode}) => {
 
             {isPassword && (
               <button type='button' onClick={() => setShowPassword((prev => !prev))}
-                className='ml-2 text-gray-500 hover:text-purple-500 transition-colors'>
+              className='ml-2 text-gray-500 hover:text-purple-500 transition-colors'>
                   {showPassword ? <EyeOff className='w-5 h-5'/> : <Eye className='w-5 h-5'/> }
               </button>
             )}
           </div>
         ))}
 
-        <div className='flex items-center'>
-          <input type="checkbox" id='rememberMe' checked={rememberMe} onChange={() => setRememberMe(!rememberMe)}
-          className='h-4 w-4 text-purple-500 focus:ring-purple-400 border-gray-300 rounded ' required />
-          <label htmlFor='rememberMe'
-          className='ml-2 block text-sm text-gray-700 '>Remember Me</label>
+        {/* Remember + Forgot password row */}
+        <div className='flex items-center justify-between'>
+          <label className='flex items-center'>
+            <input type="checkbox" id='rememberMe' checked={rememberMe} onChange={() => setRememberMe(!rememberMe)}
+            className='h-4 w-4 text-purple-500 focus:ring-purple-400 border-gray-300 rounded ' />
+            <span className='ml-2 block text-sm text-gray-700 '>Remember Me</span>
+          </label>
+
+          <button type='button' onClick={() => navigate('/forgot-password')} className='text-sm text-purple-600 hover:text-purple-700 hover:underline font-medium transition-colors'>
+            Forgot Password?
+          </button>
         </div>
 
         <button type='submit' className={BUTTON_CLASSES} disabled={loading}>
@@ -149,7 +161,9 @@ const Login = ({onSubmit, onSwitchMode}) => {
         </button>
       </p>
     </div>
+  
   )
+  
 }
 
 export default Login

@@ -5,6 +5,8 @@ import Layout from './components/Layout';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import Dashboard from './pages/Dashboard';
+import ForgotPassword from './components/ForgotPassword'
+import ResetPassword from './components/ResetPassword'
 
 const App = () => {
   const navigate = useNavigate();
@@ -53,6 +55,14 @@ const App = () => {
       <Route path='/signup' element={<div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center'>
         <SignUp onSubmit={handleAuthSubmit} onSwitchMode={() => navigate('/login')}/>
       </div>}/>
+
+      <Route path='/forgot-password' element={<div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center'>
+        <ForgotPassword />
+      </div>} />
+
+      <Route path='/reset-password/:token' element={<div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center'>
+        <ResetPassword />
+      </div>} />
 
       <Route element={currentUser ? <ProtectedLayout /> :
         <Navigate to='/login' replace/>}>

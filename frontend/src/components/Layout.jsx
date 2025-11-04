@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Navbar from './Navbar'
 import Sidebar from './Sidebar';
 import { Outlet } from 'react-router-dom';
-import axios, { Axios } from 'axios'
+import axios from 'axios'
 import {Circle, TrendingUp, Clock, Zap} from 'lucide-react'
 
 const Layout = ({onLogout, user}) => {
@@ -17,7 +17,21 @@ const Layout = ({onLogout, user}) => {
 
         try {
             const token = localStorage.getItem('token');
-            if(!token) throw new Error("No Auth Token Found")
+            // If no token, treat as unauthenticated (don't throw).
+            if(!token) {
+                // Optionally show a brief message, then redirect to login via onLogout
+                setError("No Auth Token Found");
+                // ensure loading is false and redirect
+                setLoading(false);
+                if (typeof onLogout === 'function') {
+                  onLogout();
+                }
+                return;
+            }
+
+            // DEBUG: log token length (do not log full token in production)
+            console.debug('fetchTasks: token present, length=', token?.length)
+
             const {data} = await axios.get("http://localhost:4000/api/tasks/gp" , {
                 headers: {Authorization: `Bearer ${token}`}
             })  
@@ -28,9 +42,10 @@ const Layout = ({onLogout, user}) => {
             setTasks(arr)
         } 
         catch (err) {
-            console.error(err);
-            setError(err.message || "Could not load tasks.")
-            if(err.response?.status === 401) onLogout()
+            console.error('fetchTasks error', err.response?.status, err.response?.data || err.message);
+            setError(err.response?.data?.message || err.message || "Could not load tasks.")
+            // Only logout automatically when the server explicitly returns 401
+            if(err.response?.status === 401 && typeof onLogout === 'function') onLogout()
         }
         finally{
             setLoading(false)
