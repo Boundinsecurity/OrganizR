@@ -57,7 +57,7 @@ const ForgotPassword = () => {
       {returnedToken && (
         <div className='mt-4 p-3 bg-yellow-50 border border-yellow-100 rounded'>
           <p className='text-xs text-gray-600'>Dev: reset token (copy & open reset link):</p>
-          <pre className='text-xs break-words mt-1 text-purple-700'>{returnedToken}</pre>
+          <pre className='text-xs break-words mt-1 text-purple-700'></pre>
           <div className='mt-2'>
             <button onClick={() => navigate(`/reset-password/${returnedToken}`)} className='text-sm text-purple-600 hover:underline'>Use this token to reset password</button>
           </div>

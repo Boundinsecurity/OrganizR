@@ -3,7 +3,7 @@ import Navbar from './Navbar'
 import Sidebar from './Sidebar';
 import { Outlet } from 'react-router-dom';
 import axios from 'axios'
-import {Circle, TrendingUp, Clock, Zap} from 'lucide-react'
+import {Circle, TrendingUp, Clock, Zap, Cherry, Compass, Motorbike, ChartNoAxesCombined} from 'lucide-react'
 
 const Layout = ({onLogout, user}) => {
 
@@ -134,7 +134,8 @@ const Layout = ({onLogout, user}) => {
                 <div className='xl:col-span-1 space-y-4 sm:space-y-6'>
                     <div className='bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-purple-100 '>
                         <h3 className=' text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-800 flex items-center gap-2'>
-                            <TrendingUp className='w-4 h-4 sm:w-5 sm:h-5 text-purple-500'/>
+                            <ChartNoAxesCombined
+                         className='w-4 h-4 sm:w-5 sm:h-5 text-purple-500'/>
                             Task Statistics
                         </h3>
 
@@ -142,7 +143,7 @@ const Layout = ({onLogout, user}) => {
                             <StatCard title='Total Tasks' value={stats.totalCount} icon={<Circle className='w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-500 '/>}/>
                             <StatCard title='Completed' value={stats.completedTasks} icon={<Circle className='w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-500 '/>}/>
                             <StatCard title='Pending' value={stats.pendingCount} icon={<Circle className='w-3.5 h-3.5 sm:w-4 sm:h-4 text-fuchsia-500 '/>}/>
-                            <StatCard title='Completion Rate' value={`${stats.completionPerecentage}%`} icon={<Zap className='w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-500 '/>}/>
+                            <StatCard title='Completion Rate' value={`${stats.completionPerecentage}%`} icon={<Motorbike    className='w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-500 '/>}/>
                         </div>
 
                         <hr className='my-3 sm:my-4 border-purple-100 '/>

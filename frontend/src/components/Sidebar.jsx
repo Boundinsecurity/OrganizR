@@ -9,7 +9,7 @@ import {
 } from "../assets/dummy";
 import { Sparkles, Lightbulb, Menu, X } from "lucide-react";
 
-const Sidebar = (user, tasks) => {
+const Sidebar = ({user, tasks}) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -47,7 +47,7 @@ const Sidebar = (user, tasks) => {
             <span
               className={` ${
                 isMobile ? "block" : "hidden lg:block"
-              } ${LINK_CLASSES}`}
+              } ${LINK_CLASSES.text}`}
             >
               {text}
             </span>
@@ -97,29 +97,7 @@ const Sidebar = (user, tasks) => {
 
           {renderMenuItems()}
 
-          <div className="mt-auto pt-6 lg:block hidden">
-            <div className={TIP_CARD.container}>
-              <div className="flex items-center gap-2">
-                <div className={TIP_CARD.iconWrapper}>
-                  <Lightbulb className="w-5 h-5 text-purple-600" />
-                </div>
-
-                <div>
-                  <h3 className={TIP_CARD.title}>Pro Tip</h3>
-                  <p className={TIP_CARD.text}>
-                    Use keyboard shortcut to boost productivity..
-                  </p>
-                  <a
-                    href="https://www.hexagondigitalservices.com/"
-                    target="_blank"
-                    className="block mt-2 text-sm text-purple-500 hover:underline"
-                  >
-                    Visit Hexagon Digital Services
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+          
         </div>
       </div>
 
@@ -165,7 +143,7 @@ const Sidebar = (user, tasks) => {
                 {initial}
               </div>
               <div>
-                <h2 className="text-lg font-bold mt-16 text-gray-800 ">
+                <h2 className="text-lg font-bold mt-10 text-gray-800 ">
                   Hey, {username}
                 </h2>
                 <p className="text-sm text-purple-500 font-medium flex items-center gap-1">
