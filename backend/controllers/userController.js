@@ -97,9 +97,23 @@ export async function updateProfile(req, res) {
     }
 }
 
-// Change Password (still placeholder)
+// Change Password 
 export async function updatePassword(req, res) {
-    res.status(501).json({ success: false, message: "Not implemented" })
+    const user = await User.findById(req.user._id); 
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+        return res.status(400).json({ success: false, message: "Current and new password required" });
+    }
+    const match = await bcrypt.compare(currentPassword, user.password);
+    if (!match) {
+        return res.status(400).json({ success: false, message: "Current password incorrect" });
+    }
+    if (newPassword.length < 6) {
+        return res.status(400).json({ success: false, message: "New password too short" });
+    }
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+    res.json({ success: true, message: "Password changed successfully" });
 }
 
 // Forgot Password - generate token and (in production) send email

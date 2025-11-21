@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { BACK_BUTTON, DANGER_BTN, FULL_BUTTON, INPUT_WRAPPER, personalFields, SECTION_WRAPPER, securityFields } from "../assets/dummy";
-import { ChevronLeft, Save, UserCircle, Shield, LogOut } from "lucide-react";
+import { ChevronLeft, Save, UserCircle, Shield, LogOut, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -67,7 +67,7 @@ const Profile = ({ setCurrentUser, onLogout }) => {
         )   
         if(data.success){
             toast.success("Password Changed Successfuly")
-            setPasswords({current: "", new: "", confirm: ""})
+            setPasswords({current: "hellooooo", new: "", confirm: ""})
         } 
         else toast.error(data.message)
     } 
@@ -164,9 +164,7 @@ const Profile = ({ setCurrentUser, onLogout }) => {
               </button>
 
               <div className="mt-8 pt-6 border-t border-purple-100">
-                <h3 className="text-red-600 font-semibold mb-4 flex items-center gap-2">
-                    <LogOut className="w-4 h-4"/> Danger Zone
-                </h3>
+                
                 <button className={DANGER_BTN} onClick={onLogout}>
                     Logout
                 </button>

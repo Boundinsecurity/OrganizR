@@ -8,7 +8,7 @@ import {
   forgotPassword,
   resetPassword
 } from '../controllers/userController.js'
-import authMiddleware from '../middleware/auth.js' // adjust path if you have auth middleware
+import authMiddleware from '../middleware/auth.js' 
 
 const router = express.Router()
 
@@ -16,7 +16,7 @@ router.post('/register', registerUser)
 router.post('/login', loginUser)
 router.get('/me', authMiddleware, getCurrentUser)
 router.put('/profile', authMiddleware, updateProfile)
-router.put('/change-password', authMiddleware, updatePassword)
+router.put('/password', authMiddleware, updatePassword)
 
 // password reset endpoints
 router.post('/forgot-password', forgotPassword)
