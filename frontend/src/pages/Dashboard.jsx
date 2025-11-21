@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { ADD_BUTTON, EMPTY_STATE, FILTER_LABELS, FILTER_OPTIONS, FILTER_WRAPPER, HEADER, ICON_WRAPPER, LABEL_CLASS, SELECT_CLASSES, STAT_CARD, STATS, STATS_GRID, TAB_ACTIVE, TAB_BASE, TAB_INACTIVE, TABS_WRAPPER, VALUE_CLASS, WRAPPER } from '../assets/dummy'
 import { CalendarIcon, Filter, HomeIcon, Plus } from 'lucide-react'
 import {useOutletContext} from 'react-router-dom'
+import axios from 'axios'
 
 const API_BASE = 'http://localhost:4000/api/tasks'
 
@@ -20,11 +21,11 @@ const Dashboard = () => {
     highPriority: tasks.filter(t => t.priority?.toLowerCase() === 'high').length,
     completed: tasks.filter(t => t.completed === true || t.completed === 1 || (
       typeof t.completed === 'string' && t.completed.toLowerCase() === 'yes'
-    ).length)
+    )).length
   }), [tasks])
 
   // Filter tasks
-  const filterTasks = useMemo(() => tasks.filter(task => {
+  const filteredTasks = useMemo(() => tasks.filter(task => {
     const dueDate = new Date(task.dueDate)
     const today = new Date()
     const nextWeek = new Date(today); nextWeek.setDate(today.getDate() + 7)
@@ -43,6 +44,18 @@ const Dashboard = () => {
   }), [tasks, filter])
 
   // Saviing tasks
+
+  const handleTaskSave = useCallback(async (taskData) => {
+    try {
+      if(taskData.id)  await axios.put(`${API_BASE}/${taskData.id}/gp`, taskData)
+      refreshTasks()
+      setShowModal(false)
+      setSelectTask(null)
+    } 
+    catch (error) {
+      console.error("Error Saving Tasks: ", error)
+    }
+  }, [refreshTasks])
 
   return (
     <div className={WRAPPER}>
@@ -139,11 +152,31 @@ const Dashboard = () => {
             </div>
           ): (
             filteredTasks.map(task => (
-              <TaskItem key={task._id || task.id} task={task}/>
+              <TaskItem key={task._id || task.id} task={task}
+              onRefresh={refreshTasks}
+              showCompleteCheckbox
+              onEdit={() => {setSelectTask(task); setShowModal(true)}}/>
             ))
           )}
         </div>
+
+        {/* Add Tasks Desktop*/}
+        <div 
+        onClick={() => setShowModal(true)}
+        className='hidden md:flex items-center justify-center p-4 border-2 border-dashed border-purple-200
+        rounded-xl hover:border-purple-400 bg-purple-50/50 cursor-pointer transition-colors'>
+          <Plus className='w-5 h-5 text-purple-500 mr-2'/>
+          <span className='text-gray-600 font-medium'>
+            Add New Task
+          </span>
+        </div>
       </div>
+
+      {/* Modal */}
+      <TaskModal isOpen={showModal || !selectedTask}
+      onClose={() => {setShowModal(false); setSelectTask(null)}}
+      tasktoEdit={selectedTask}
+      onSave={handleTaskSave}/>
     </div>
   )
 }
