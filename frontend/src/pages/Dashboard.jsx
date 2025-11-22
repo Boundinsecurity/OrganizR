@@ -3,6 +3,8 @@ import { ADD_BUTTON, EMPTY_STATE, FILTER_LABELS, FILTER_OPTIONS, FILTER_WRAPPER,
 import { CalendarIcon, Filter, HomeIcon, Plus } from 'lucide-react'
 import {useOutletContext} from 'react-router-dom'
 import axios from 'axios'
+import TaskModal from "../components/TaskModal"
+import TaskItem from '../components/TaskItem'
 
 const API_BASE = 'http://localhost:4000/api/tasks'
 
@@ -173,9 +175,9 @@ const Dashboard = () => {
       </div>
 
       {/* Modal */}
-      <TaskModal isOpen={showModal || !selectedTask}
+      <TaskModal isOpen={showModal || !!selectedTask}
       onClose={() => {setShowModal(false); setSelectTask(null)}}
-      tasktoEdit={selectedTask}
+      taskToEdit={selectedTask}
       onSave={handleTaskSave}/>
     </div>
   )
