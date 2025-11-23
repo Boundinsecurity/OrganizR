@@ -1,8 +1,9 @@
 import React, { act, useEffect, useState } from 'react'
 import { getPriorityBadgeColor, getPriorityColor, MENU_OPTIONS, TI_CLASSES } from '../assets/dummy'
-import { CheckCircle2, MoreVertical } from 'lucide-react'
+import { Calendar, CheckCircle2, Clock, MoreVertical } from 'lucide-react'
 import axios from 'axios'
-import { updateTask } from '../../../backend/controllers/taskController'
+import {format, isToday} from 'date-fns'
+import TaskModal from './TaskModal'
 
 const API_BASE = 'http://localhost:4000/api/tasks'
 
@@ -135,10 +136,24 @@ const TaskItem = ({task, onRefresh, onLogout, showCompleteCheckbox=true}) => {
           <div>
             <div className={`${TI_CLASSES.dateRow} ${task.dueDate && isToday(new Date(task.dueDate))
               ? 'text-fuchsia-600' : 'text-gray-500'}`}>
+                <Calendar className='w-3.5 h-3.5 '/>
+                {task.dueDate ? (isToday(new Date(task.dueDate)) ?
+                'Today' : format(new Date(task.dueDate), 'dd MMM')) : '-'}
+            </div>
+
+            <div className={TI_CLASSES.createdRow}>
+              <Clock className='w-3 h-3 sm:w-3.5 sm:h-3.5'/>
+              {task.createdAt ? 
+              `Created ${format(new Date(task.createdAt), 'dd MMM')}` : 'No Date'}
             </div>
           </div>
         </div>
       </div>
+
+      <TaskModal isOpen={showEditModal}
+      onClose={() => setShowEditModal(false)}
+      taskToEdit={task}
+      onSave={handleSave}/>
     </>
   )
 }
